@@ -35,16 +35,59 @@ button,input,a{font:inherit} button{cursor:pointer} button:focus-visible,a:focus
 /* 독서 화면의 이미지 선택/길게 누르기 메뉴 억제 (보안 기능은 아님) */
 .book img,.overlay img{-webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none}
 .protect-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;background:#281d14;color:#f7e5c5;border:1px solid #bb985e;border-radius:10px;padding:11px 18px;font-size:13px;box-shadow:0 8px 25px #0008;pointer-events:none;max-width:90vw;text-align:center}
+
+/* Isolated ebook positioning, avoids site theme collisions with .app/.main/.sidebar */
+html,body{width:100%;height:100%;overflow:hidden}
+body > #yusungEbookApp{
+ position:fixed!important;inset:0!important;width:100%!important;height:100vh!important;height:100dvh!important;
+ display:grid!important;grid-template-columns:290px minmax(0,1fr)!important;
+ grid-template-rows:minmax(0,1fr)!important;align-items:stretch!important;
+ margin:0!important;padding:0!important;max-width:none!important;min-width:0!important;
+ overflow:hidden!important;isolation:isolate;
+}
+#yusungEbookApp > #sidebar{
+ position:relative!important;grid-column:1!important;grid-row:1!important;
+ height:100%!important;min-height:0!important;max-height:100%!important;
+ display:flex!important;flex-direction:column!important;overflow:hidden!important;
+}
+#yusungEbookApp > #yusungEbookMain{
+ position:relative!important;grid-column:2!important;grid-row:1!important;
+ width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;
+ max-width:none!important;margin:0!important;padding:0!important;
+ display:flex!important;flex-direction:column!important;overflow:hidden!important;
+}
+#yusungEbookMain > .topbar,#yusungEbookMain > .bottom{flex-shrink:0!important}
+#yusungEbookMain > .room{flex:1 1 auto!important;min-height:0!important;min-width:0!important}
+#yusungEbookMain .book-frame{flex-shrink:1;min-width:0}
+#yusungEbookMain .book{box-sizing:border-box}
+#yusungEbookApp #toc{min-height:0!important;overflow-y:auto!important}
+@media(min-width:761px) and (max-width:1050px){
+ body > #yusungEbookApp{grid-template-columns:248px minmax(0,1fr)!important}
+}
+@media(max-width:760px){
+ body > #yusungEbookApp{display:block!important;overflow:hidden!important}
+ #yusungEbookApp > #sidebar{
+  position:fixed!important;left:0!important;top:0!important;bottom:0!important;
+  height:100dvh!important;width:min(310px,87vw)!important;max-height:none!important;
+  grid-column:auto!important;grid-row:auto!important;transform:translateX(-104%);
+ }
+ #yusungEbookApp > #sidebar.open{transform:translateX(0)}
+ #yusungEbookApp > #yusungEbookMain{
+  position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+  grid-column:auto!important;grid-row:auto!important;
+ }
+ #yusungEbookMain .book{max-height:calc(100dvh - 235px)!important}
+}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app" id="yusungEbookApp">
 <aside class="sidebar" id="sidebar" aria-label="책 목차 탐색">
- <div class="side-top"><div class="side-kicker">THE AUTHOR'S LIBRARY</div><h2>김유성 작가의 서재</h2><p class="side-desc">AI 영상 제작의 기초부터 실전까지<br>12개 학습영역 · 72개 핵심 개념</p><div class="side-actions"><button class="pill" id="tocFirst">⌂ 표지로</button><a class="pill" href="원본_전자책.pdf" download>↓ PDF 저장</a><button class="pill" id="closeMenu" style="display:none">✕ 닫기</button></div></div>
+ <div class="side-top"><div class="side-kicker">THE AUTHOR'S LIBRARY</div><h2>김유성 작가의 서재</h2><p class="side-desc">AI 영상 제작의 기초부터 실전까지<br>12개 학습영역 · 72개 핵심 개념</p><div class="side-actions"><button class="pill" id="tocFirst">⌂ 표지로</button><a class="pill" href="book.pdf" download>↓ PDF 저장</a><button class="pill" id="closeMenu" style="display:none">✕ 닫기</button></div></div>
  <div class="toc-caption">CONTENTS · 책 목차</div><nav class="toc" id="toc" aria-label="도서 목차"></nav>
  <div class="side-foot"><b>김유성 지음</b><br>작가의 창 · AI콘텐츠마케팅연구소 유쌤클래스<br>© 김유성. 저작권자의 허락 없이 무단 복제·배포를 금합니다.</div>
 </aside><div class="backdrop" id="backdrop"></div>
-<main class="main">
+<main class="main" id="yusungEbookMain">
  <header class="topbar"><button class="iconbtn mobile-menu" id="openMenu" aria-label="목차 열기">☰</button><div class="brand"><small>ONLINE LIBRARY · DIGITAL BOOK</small><h1>AI 영상 제작의 기초부터 실전까지</h1></div><div class="toolbar"><button class="iconbtn" id="sound" aria-pressed="true" title="책장 넘김 소리">♫ <span class="long">소리 켜짐</span></button><button class="iconbtn optional" id="zoom" title="페이지 크게 보기">⌕ <span class="long">확대</span></button><button class="iconbtn" id="fullscreen" title="전체 화면">⛶</button></div></header>
  <section class="room"><div class="plaque">✦ &nbsp; 한 장씩 넘기며 배우는 영상 제작의 모든 것 &nbsp; ✦</div>
  <div class="book-frame"><button class="turn-arrow prev" id="prev" aria-label="이전 페이지">‹</button>
