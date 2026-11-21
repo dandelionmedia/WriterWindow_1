@@ -31,12 +31,16 @@ button,input,a{font:inherit} button{cursor:pointer} button:focus-visible,a:focus
 @media(max-width:760px){:root{--side:0px}.app{display:block}.sidebar{position:fixed;top:0;bottom:0;left:0;width:min(310px,87vw);transform:translateX(-104%);transition:transform .25s;box-shadow:14px 0 50px #000b;z-index:30}.sidebar.open{transform:translateX(0)}.backdrop{display:none;position:fixed;inset:0;background:#0009;z-index:25}.backdrop.open{display:block}.mobile-menu{display:inline-flex}.topbar{min-height:64px;padding:9px 11px}.brand h1{font-size:13px}.brand small{font-size:9px}.toolbar{gap:5px}.iconbtn{padding:0 9px;height:34px}.toolbar .optional{display:none}.room{gap:11px;padding:14px 3px 3px}.plaque{font-size:9px}.book{width:min(85vw,420px);height:auto;max-width:unset;aspect-ratio:0.707;max-height:calc(100dvh - 240px)}.page{width:100%}.page.left{display:none}.page.right{width:100%;border-radius:3px}.spine{left:0;transform:none;width:10px}.turn-sheet{width:100%}.turn-sheet.forward{right:0;transform-origin:left}.turn-sheet.backward{left:0;transform-origin:right}.turn-arrow{top:auto;bottom:10px;transform:none;width:39px;height:39px;font-size:24px}.turn-arrow.prev{left:5px}.turn-arrow.next{right:5px}.controls{width:96%;gap:7px;padding:0 5px}.hint{font-size:10px}.bottom{padding:8px 10px;font-size:10px}.bottom span:nth-child(2){display:none}}
 @media(max-height:720px) and (min-width:761px){.book{height:min(60dvh,500px)}.room{gap:8px}.topbar{min-height:60px}.bottom{padding:7px 18px}}
 @media(prefers-reduced-motion:reduce){.turn-sheet.forward,.turn-sheet.backward{animation-duration:.01s}}
+
+/* 독서 화면의 이미지 선택/길게 누르기 메뉴 억제 (보안 기능은 아님) */
+.book img,.overlay img{-webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none}
+.protect-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;background:#281d14;color:#f7e5c5;border:1px solid #bb985e;border-radius:10px;padding:11px 18px;font-size:13px;box-shadow:0 8px 25px #0008;pointer-events:none;max-width:90vw;text-align:center}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar" id="sidebar" aria-label="책 목차 탐색">
- <div class="side-top"><div class="side-kicker">THE AUTHOR'S LIBRARY</div><h2>김유성 작가의 서재</h2><p class="side-desc">AI 영상 제작의 기초부터 실전까지<br>12개 학습영역 · 72개 핵심 개념</p><div class="side-actions"><button class="pill" id="tocFirst">⌂ 표지로</button><a class="pill" href="book.pdf" download>↓ PDF 저장</a><button class="pill" id="closeMenu" style="display:none">✕ 닫기</button></div></div>
+ <div class="side-top"><div class="side-kicker">THE AUTHOR'S LIBRARY</div><h2>김유성 작가의 서재</h2><p class="side-desc">AI 영상 제작의 기초부터 실전까지<br>12개 학습영역 · 72개 핵심 개념</p><div class="side-actions"><button class="pill" id="tocFirst">⌂ 표지로</button><a class="pill" href="원본_전자책.pdf" download>↓ PDF 저장</a><button class="pill" id="closeMenu" style="display:none">✕ 닫기</button></div></div>
  <div class="toc-caption">CONTENTS · 책 목차</div><nav class="toc" id="toc" aria-label="도서 목차"></nav>
  <div class="side-foot"><b>김유성 지음</b><br>작가의 창 · AI콘텐츠마케팅연구소 유쌤클래스<br>© 김유성. 저작권자의 허락 없이 무단 복제·배포를 금합니다.</div>
 </aside><div class="backdrop" id="backdrop"></div>
@@ -78,4 +82,26 @@ let startX=0,startY=0;const touch=$('book');touch.addEventListener('touchstart',
 let mobilePrev=isMobile();window.addEventListener('resize',()=>{if(isMobile()!==mobilePrev){mobilePrev=isMobile();render()}});
 try{current=clamp(localStorage.getItem('yusung-book-page')||1)}catch(e){};buildToc();render();
 if(isMobile())$('closeMenu').style.display='';
+
+// 일반 방문자의 실수로 발생하는 우클릭·일부 개발자 도구 단축키를 제한합니다.
+// 브라우저로 전송된 HTML/JS/이미지를 완전히 숨기거나 복사를 막는 보안 수단은 아닙니다.
+(()=>{
+  let toastTimer;
+  function notify(){
+    let el=document.getElementById('protectNotice');
+    if(!el){el=document.createElement('div');el.id='protectNotice';el.className='protect-toast';el.setAttribute('role','status');document.body.appendChild(el)}
+    el.textContent='전자책 열람 화면에서는 마우스 오른쪽 메뉴를 사용할 수 없습니다.';
+    el.hidden=false;
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>{el.hidden=true},2200);
+  }
+  document.addEventListener('contextmenu',event=>{event.preventDefault();notify()});
+  document.addEventListener('keydown',event=>{
+    const key=event.key.toLowerCase();
+    const devTools=(event.ctrlKey||event.metaKey)&&event.shiftKey&&['i','j','c'].includes(key);
+    const viewSource=(event.ctrlKey||event.metaKey)&&key==='u';
+    const f12=event.key==='F12';
+    if(devTools||viewSource||f12){event.preventDefault();event.stopImmediatePropagation();notify()}
+  },true);
+})();
 </script></body></html>
