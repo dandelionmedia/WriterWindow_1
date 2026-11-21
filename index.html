@@ -91,6 +91,47 @@ body > #yusungEbookApp{
  }
  #yusungEbookMain .book{max-height:calc(100dvh - 235px)!important}
 }
+
+/* Premium reading edition — spacious book-first layout */
+:root{--wood:#17120f;--gold:#d3b581;--cream:#f5eddf;--muted:#c2b3a2;--side:264px}
+body{background:#16120f!important}
+#yusungEbookApp{background:#17120f}
+body > #yusungEbookApp{grid-template-columns:264px minmax(0,1fr)!important;transition:grid-template-columns .3s ease}
+#yusungEbookApp > #sidebar{background:linear-gradient(160deg,#27211c,#171411 78%)!important;border-right:1px solid #b9996338!important;box-shadow:none!important;transition:opacity .2s ease,transform .3s ease}
+.side-top{padding:23px 20px 18px}.side-top h2{font-size:26px;line-height:1.25;letter-spacing:-.04em}.side-desc{font-size:13px;line-height:1.8}.side-kicker{color:#d4b581}.toc-caption{padding-top:15px}.toc-entry{font-size:13px;padding:10px 9px}.toc-entry.sub{font-size:12px;padding-left:21px}.toc-entry .pg{font-size:11px}.side-foot{font-size:11px}
+#yusungEbookMain{background:radial-gradient(ellipse at 50% 45%,#4f4031 0%,#282018 52%,#14100e 100%)!important}
+#yusungEbookMain:before{opacity:.06!important;background:repeating-linear-gradient(90deg,transparent 0 300px,#a98b5a 301px 302px)!important}
+#yusungEbookMain:after{background:radial-gradient(ellipse at 50% 49%,#c7a77e16,transparent 75%)!important}
+#yusungEbookMain > .topbar{min-height:65px;padding:9px 22px;background:#1c1815d9;border-color:#b8996d24}
+.brand small{font-size:10px;letter-spacing:.15em}.brand h1{font-size:19px;font-weight:600;letter-spacing:-.03em}
+.iconbtn{height:38px;border-radius:11px;border-color:#bfa07047;background:#fff9ef0a;color:#f0e2d1}.iconbtn:hover,.pill:hover{background:#d6b48225}
+#yusungEbookMain > .room{gap:7px!important;padding:8px 54px 3px!important;justify-content:center!important}
+.plaque{font-size:10px;letter-spacing:.13em;color:#cbb792;opacity:.9}
+#yusungEbookMain .book-frame{max-width:100%;max-height:100%;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 20px 35px #0009)}
+#yusungEbookMain .book{height:min(calc(100dvh - 192px),calc((100vw - 264px - 124px) / 1.414))!important;max-width:100%!important;max-height:none!important;aspect-ratio:1.414!important;border-radius:6px 10px 10px 6px;box-shadow:0 5px 0 #765c40,0 9px 0 #322319,0 22px 38px #000b,0 0 0 1px #d8c5a648}
+.page{background:#fff;box-shadow:none}.page.left{box-shadow:inset -10px 0 14px -10px #0005}.page.right{box-shadow:inset 10px 0 14px -10px #0005}
+.turn-arrow{height:45px;width:45px;border-radius:13px;border:1px solid #d8bd8950;background:#17120fe6;box-shadow:0 5px 14px #0007;transition:background .2s,transform .2s}
+.turn-arrow.prev{left:-51px}.turn-arrow.next{right:-51px}.turn-arrow:hover:not(:disabled){background:#6e502e;transform:translateY(-50%) scale(1.04)}
+#yusungEbookMain .controls{width:min(700px,99%);gap:12px;margin-top:3px;padding:5px 8px 0}.progresslabel{font-size:13px;font-weight:600;color:#e9d6b8}.jump input{font-size:13px;width:56px}.hint{margin:0 0 3px;font-size:11px;color:#bdac96}
+#yusungEbookMain > .bottom{padding:8px 21px;min-height:32px;background:#1b1614aa}
+.focus-label{display:inline}.focus-active #sidebar{opacity:0;pointer-events:none;transform:translateX(-15px)}
+body > #yusungEbookApp.focus-active{grid-template-columns:0 minmax(0,1fr)!important}
+.focus-active #yusungEbookMain .book{height:min(calc(100dvh - 192px),calc((100vw - 124px) / 1.414))!important}
+@media(min-width:761px) and (max-width:1120px){body > #yusungEbookApp{grid-template-columns:228px minmax(0,1fr)!important}#yusungEbookMain .book{height:min(calc(100dvh - 175px),calc((100vw - 228px - 112px) / 1.414))!important}.focus-active #yusungEbookMain .book{height:min(calc(100dvh - 175px),calc((100vw - 112px) / 1.414))!important}}
+@media(min-width:761px) and (max-height:670px){#yusungEbookMain > .room{gap:3px!important}.plaque,.hint{display:none!important}#yusungEbookMain .book{height:min(calc(100dvh - 137px),calc((100vw - 264px - 124px) / 1.414))!important}.focus-active #yusungEbookMain .book{height:min(calc(100dvh - 137px),calc((100vw - 124px) / 1.414))!important}}
+@media(max-width:760px){
+ body > #yusungEbookApp,body > #yusungEbookApp.focus-active{display:block!important}
+ #yusungEbookApp > #sidebar{opacity:1!important;pointer-events:auto!important;transform:translateX(-104%)}#yusungEbookApp > #sidebar.open{transform:translateX(0)}
+ #yusungEbookMain > .topbar{min-height:58px;padding:7px 9px;gap:6px}.brand h1{font-size:13px}.brand small{font-size:8px;margin-bottom:3px}.toolbar{gap:4px}.iconbtn{height:33px;padding:0 8px}
+ #yusungEbookMain > .room{padding:5px 7px 3px!important;gap:6px!important}.plaque{display:none}
+ #yusungEbookMain .book-frame{max-width:100%;width:100%;flex:0 1 auto}
+ #yusungEbookMain .book,#yusungEbookApp.focus-active #yusungEbookMain .book{width:min(calc(100vw - 18px),calc((100dvh - 154px)*.707))!important;height:auto!important;aspect-ratio:.707!important;max-width:100%!important;max-height:none!important;margin:auto}
+ .turn-arrow{top:auto;bottom:8px;width:38px;height:38px;transform:none}.turn-arrow.prev{left:12px}.turn-arrow.next{right:12px}.turn-arrow:hover:not(:disabled){transform:scale(1.03)}
+ #yusungEbookMain .controls{width:100%;padding:3px 3px 0;gap:8px}.hint{font-size:10px;margin-bottom:2px}#yusungEbookMain > .bottom{padding:6px 10px;min-height:26px}
+ .toolbar #focusMode{display:none}
+}
+@media(max-width:390px){.brand h1{font-size:11px}.toolbar #sound .long{display:none}.hint{display:none}}
+
 </style>
 </head>
 <body>
@@ -101,7 +142,7 @@ body > #yusungEbookApp{
  <div class="side-foot"><b>김유성 지음</b><br>작가의 창 · AI콘텐츠마케팅연구소 유쌤클래스<br>© 김유성. 저작권자의 허락 없이 무단 복제·배포를 금합니다.</div>
 </aside><div class="backdrop" id="backdrop"></div>
 <main class="main" id="yusungEbookMain">
- <header class="topbar"><button class="iconbtn mobile-menu" id="openMenu" aria-label="목차 열기">☰</button><div class="brand"><small>ONLINE LIBRARY · DIGITAL BOOK</small><h1>AI 영상 제작의 기초부터 실전까지</h1></div><div class="toolbar"><button class="iconbtn" id="sound" aria-pressed="true" title="책장 넘김 소리">♫ <span class="long">소리 켜짐</span></button><button class="iconbtn optional" id="zoom" title="페이지 크게 보기">⌕ <span class="long">확대</span></button><button class="iconbtn" id="fullscreen" title="전체 화면">⛶</button></div></header>
+ <header class="topbar"><button class="iconbtn mobile-menu" id="openMenu" aria-label="목차 열기">☰</button><div class="brand"><small>ONLINE LIBRARY · DIGITAL BOOK</small><h1>AI 영상 제작의 기초부터 실전까지</h1></div><div class="toolbar"><button class="iconbtn" id="focusMode" aria-pressed="false" title="목차를 접고 책에 집중">▣ <span class="focus-label">집중 독서</span></button><button class="iconbtn" id="sound" aria-pressed="true" title="책장 넘김 소리">♫ <span class="long">소리 켜짐</span></button><button class="iconbtn optional" id="zoom" title="페이지 크게 보기">⌕ <span class="long">확대</span></button><button class="iconbtn" id="fullscreen" title="전체 화면">⛶</button></div></header>
  <section class="room"><div class="plaque">✦ &nbsp; 한 장씩 넘기며 배우는 영상 제작의 모든 것 &nbsp; ✦</div>
  <div class="book-frame"><button class="turn-arrow prev" id="prev" aria-label="이전 페이지">‹</button>
  <div class="book" id="book" aria-label="전자책 펼침 화면"><div class="page left empty" id="left"></div><div class="page right" id="right"></div><div class="spine"></div><div class="turn-sheet" id="turnSheet"></div><span class="pagenum leftnum" id="leftnum"></span><span class="pagenum rightnum" id="rightnum"></span></div>
@@ -152,7 +193,7 @@ function next(){go(current+(isMobile()?1:current===1?1:2))};function prev(){go(c
 function navigate(n){go(n,false);closeMenu()}
 function buildToc(){let target=$('toc');const entries=[{level:1,title:'표지',page:1},...TOC_DATA];let lastParent=null;entries.forEach((t,idx)=>{if(t.level===1){let section=document.createElement('div');section.className='toc-group';let parent=document.createElement('button');parent.className='toc-entry';parent.dataset.page=t.page;parent.innerHTML=`<span class="n">${/^\d\d/.test(t.title)?t.title.slice(0,2):'✦'}</span><span class="txt"></span><span class="pg">${t.page}</span>`;parent.querySelector('.txt').textContent=t.title.replace(/^\d\d\s*/,'');parent.addEventListener('click',()=>navigate(t.page));let children=document.createElement('div');children.className='toc-children';section.append(parent,children);target.append(section);lastParent=children;}else if(lastParent){let b=document.createElement('button');b.className='toc-entry sub';b.dataset.page=t.page;b.innerHTML='<span class="txt"></span><span class="pg"></span>';b.querySelector('.txt').textContent=t.title;b.querySelector('.pg').textContent=t.page;b.addEventListener('click',()=>navigate(t.page));lastParent.append(b)}})}
 function closeMenu(){$('sidebar').classList.remove('open');$('backdrop').classList.remove('open')};function openMenu(){$('sidebar').classList.add('open');$('backdrop').classList.add('open')}
-$('openMenu').onclick=openMenu;$('backdrop').onclick=closeMenu;$('closeMenu').onclick=closeMenu;$('tocFirst').onclick=()=>navigate(1);$('prev').onclick=prev;$('next').onclick=next;
+$('focusMode').onclick=()=>{const on=$('yusungEbookApp').classList.toggle('focus-active');$('focusMode').setAttribute('aria-pressed',String(on));$('focusMode').innerHTML=on?'▤ <span class="focus-label">목차 보기</span>':'▣ <span class="focus-label">집중 독서</span>';};$('openMenu').onclick=openMenu;$('backdrop').onclick=closeMenu;$('closeMenu').onclick=closeMenu;$('tocFirst').onclick=()=>navigate(1);$('prev').onclick=prev;$('next').onclick=next;
 $('progress').addEventListener('change',e=>go(+e.target.value,false));$('pageInput').addEventListener('change',e=>go(+e.target.value,false));$('sound').onclick=()=>{soundOn=!soundOn;$('sound').setAttribute('aria-pressed',String(soundOn));$('sound').innerHTML=soundOn?'♫ <span class="long">소리 켜짐</span>':'♪ <span class="long">소리 꺼짐</span>'};
 $('fullscreen').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.()};
 function openZoom(){overlayOpen=true;$('overlay').classList.add('open');$('zoomImage').src=file(current);$('zoomCount').textContent=`${current} / ${COUNT}`};function closeZoom(){overlayOpen=false;$('overlay').classList.remove('open')};$('zoom').onclick=openZoom;$('zoomClose').onclick=closeZoom;$('zoomPrev').onclick=()=>go(current-1,false);$('zoomNext').onclick=()=>go(current+1,false);$('zoomImage').onclick=()=>{};
