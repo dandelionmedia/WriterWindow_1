@@ -138,6 +138,46 @@ body > #yusungEbookApp.focus-active{grid-template-columns:0 minmax(0,1fr)!import
 #yusungEbookMain .curl-canvas.active{display:block}
 #yusungEbookMain .book.is-turning .spine{opacity:.5}
 @media(prefers-reduced-motion:reduce){#yusungEbookMain .curl-canvas{display:none!important}}
+
+/* Immersive full-screen reading: one large page, accessible zoom, and pan. */
+#immersiveReader{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 30%,#45382d 0%,#18130f 70%,#0c0908 100%);color:#f8e9cc;display:none;flex-direction:column;min-width:0;overflow:hidden}
+#immersiveReader.open{display:flex}
+#immersiveReader .reader-bar{height:58px;min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left));background:#16110ff0;border-bottom:1px solid #b99b6547}
+#immersiveReader .reader-title{font-size:14px;font-weight:650;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.025em}
+#immersiveReader .reader-title small{font-size:10px;display:block;color:#c4aa80;font-weight:400;letter-spacing:.15em;margin-bottom:3px}
+#immersiveReader .reader-tools{display:flex;gap:7px;align-items:center;flex-shrink:0}
+#immersiveReader button{height:38px;min-width:38px;padding:0 12px;background:#342a22;border:1px solid #b99b6570;border-radius:9px;color:#f6e5c8;font-size:14px;cursor:pointer;touch-action:manipulation}
+#immersiveReader button:hover{background:#54412d}#immersiveReader button:focus-visible{outline:2px solid #f4cd8a;outline-offset:2px}#immersiveReader button:disabled{opacity:.35;cursor:default}
+#immersiveReader .reader-viewport{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none;cursor:grab;overscroll-behavior:contain}
+#immersiveReader .reader-viewport.grabbing{cursor:grabbing}
+#immersiveReader #readerPage{position:absolute;top:0;left:0;width:1px;height:1px;max-width:none;max-height:none;object-fit:fill;transform-origin:top left;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;box-shadow:0 14px 42px #0009;background:#fff;will-change:transform}
+#immersiveReader .reader-footer{min-height:62px;display:flex;align-items:center;justify-content:center;gap:11px;padding:9px 14px max(9px,env(safe-area-inset-bottom));background:#17120fec;border-top:1px solid #b99b653a}
+#immersiveReader .reader-footer input[type=range]{width:min(27vw,320px);accent-color:#d2b47e}
+#immersiveReader .reader-counter{font-size:13px;font-variant-numeric:tabular-nums;min-width:75px;text-align:center}
+#immersiveReader #readerZoomPct{display:inline-block;font-size:12px;min-width:43px;text-align:center;font-variant-numeric:tabular-nums;color:#e9d8ba}
+#immersiveReader .reader-hint{font-size:11px;color:#bba98b}
+#immersiveReader .reader-mobile-only{display:none}
+#immersiveReader .reader-edge{position:absolute;top:50%;transform:translateY(-50%);z-index:3;opacity:.82;border-radius:14px;padding:0;min-width:40px;height:52px;font-size:27px}
+#immersiveReader .reader-edge.previous{left:7px}#immersiveReader .reader-edge.following{right:7px}
+#immersiveReader .reader-status{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:11px;color:#fff8;background:#1a110fc9;border-radius:18px;padding:5px 14px;pointer-events:none;opacity:0;transition:opacity .2s}
+#immersiveReader .reader-status.show{opacity:1}
+body.immersive-open{overflow:hidden!important}
+@media(max-width:760px){
+ #immersiveReader .reader-bar{height:53px;min-height:53px;padding:6px 9px;gap:6px}
+ #immersiveReader .reader-title{font-size:11px;max-width:38vw}
+ #immersiveReader .reader-title small{font-size:8px;letter-spacing:.05em}
+ #immersiveReader .reader-tools{gap:4px}
+ #immersiveReader button{padding:0 7px;height:36px;min-width:34px;font-size:13px}
+ #immersiveReader .reader-tools #readerFit{display:none}
+ #immersiveReader .reader-footer{min-height:58px;gap:5px;padding:8px 5px max(8px,env(safe-area-inset-bottom))}
+ #immersiveReader .reader-footer input[type=range]{width:min(23vw,110px)}
+ #immersiveReader .reader-counter{font-size:11px;min-width:60px}
+ #immersiveReader .reader-hint{display:none}
+ #immersiveReader .reader-mobile-only{display:inline}
+ #immersiveReader .reader-edge{top:50%;height:45px;min-width:32px;opacity:.65}
+}
+@media(max-width:390px){#immersiveReader .reader-title{max-width:31vw}#immersiveReader .reader-tools #readerZoomPct{min-width:33px;font-size:11px}#immersiveReader .reader-footer input[type=range]{width:21vw}}
+
 </style>
 </head>
 <body>
@@ -148,7 +188,7 @@ body > #yusungEbookApp.focus-active{grid-template-columns:0 minmax(0,1fr)!import
  <div class="side-foot"><b>김유성 지음</b><br>작가의 창 · AI콘텐츠마케팅연구소 유쌤클래스<br>© 김유성. 저작권자의 허락 없이 무단 복제·배포를 금합니다.</div>
 </aside><div class="backdrop" id="backdrop"></div>
 <main class="main" id="yusungEbookMain">
- <header class="topbar"><button class="iconbtn mobile-menu" id="openMenu" aria-label="목차 열기">☰</button><div class="brand"><small>ONLINE LIBRARY · DIGITAL BOOK</small><h1>AI 영상 제작의 기초부터 실전까지</h1></div><div class="toolbar"><button class="iconbtn" id="focusMode" aria-pressed="false" title="목차를 접고 책에 집중">▣ <span class="focus-label">집중 독서</span></button><button class="iconbtn" id="sound" aria-pressed="true" title="책장 넘김 소리">♫ <span class="long">소리 켜짐</span></button><button class="iconbtn optional" id="zoom" title="페이지 크게 보기">⌕ <span class="long">확대</span></button><button class="iconbtn" id="fullscreen" title="전체 화면">⛶</button></div></header>
+ <header class="topbar"><button class="iconbtn mobile-menu" id="openMenu" aria-label="목차 열기">☰</button><div class="brand"><small>ONLINE LIBRARY · DIGITAL BOOK</small><h1>AI 영상 제작의 기초부터 실전까지</h1></div><div class="toolbar"><button class="iconbtn" id="focusMode" aria-pressed="false" title="목차를 접고 책에 집중">▣ <span class="focus-label">집중 독서</span></button><button class="iconbtn" id="sound" aria-pressed="true" title="책장 넘김 소리">♫ <span class="long">소리 켜짐</span></button><button class="iconbtn optional" id="zoom" title="페이지 크게 보기">⌕ <span class="long">확대</span></button><button class="iconbtn" id="fullscreen" title="전체화면 독서 · 확대 / 축소" aria-label="전체화면 독서 모드">⛶</button></div></header>
  <section class="room"><div class="plaque">✦ &nbsp; 한 장씩 넘기며 배우는 영상 제작의 모든 것 &nbsp; ✦</div>
  <div class="book-frame"><button class="turn-arrow prev" id="prev" aria-label="이전 페이지">‹</button>
  <div class="book" id="book" aria-label="전자책 펼침 화면"><div class="page left empty" id="left"></div><div class="page right" id="right"></div><div class="spine"></div><canvas class="curl-canvas" id="curlCanvas" aria-hidden="true"></canvas><div class="turn-sheet" id="turnSheet"></div><span class="pagenum leftnum" id="leftnum"></span><span class="pagenum rightnum" id="rightnum"></span></div>
@@ -158,6 +198,34 @@ body > #yusungEbookApp.focus-active{grid-template-columns:0 minmax(0,1fr)!import
  <footer class="bottom"><span>📚 김유성 작가의 디지털 서재</span><span>현장이 답입니다. 배우고 실행하는 AI</span><span>출판사 작가의 창</span></footer>
 </main></div>
 <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="페이지 크게 보기"><div class="overlaybar"><button id="zoomPrev">‹ 이전</button><span id="zoomCount"></span><button id="zoomNext">다음 ›</button><button id="zoomClose">✕ 닫기</button></div><img id="zoomImage" alt="크게 보기 페이지"></div>
+
+<!-- A dedicated single-page reading view for phones, tablets, and desktops. -->
+<section id="immersiveReader" role="dialog" aria-modal="true" aria-label="전체화면 집중 독서" aria-hidden="true">
+ <div class="reader-bar">
+  <div class="reader-title"><small>THE AUTHOR'S LIBRARY</small>AI 영상 제작의 기초부터 실전까지</div>
+  <div class="reader-tools">
+   <button id="readerMinus" title="글자 축소" aria-label="축소">−</button>
+   <span id="readerZoomPct" aria-live="polite">100%</span>
+   <button id="readerPlus" title="글자 확대" aria-label="확대">＋</button>
+   <button id="readerFit" title="한 페이지 전체 맞춤">맞춤</button>
+   <button id="readerClose" title="전체화면 나가기" aria-label="독서 모드 종료">✕ <span class="reader-close-text">닫기</span></button>
+  </div>
+ </div>
+ <div id="readerViewport" class="reader-viewport" aria-label="확대된 전자책 페이지. 확대 후 드래그하여 이동할 수 있습니다.">
+  <img id="readerPage" draggable="false" alt="확대된 전자책 페이지" />
+  <button id="readerEdgePrev" class="reader-edge previous" aria-label="이전 페이지">‹</button>
+  <button id="readerEdgeNext" class="reader-edge following" aria-label="다음 페이지">›</button>
+  <div class="reader-status" id="readerStatus" role="status"></div>
+ </div>
+ <div class="reader-footer">
+  <button id="readerPrev" aria-label="이전 페이지">‹ 이전</button>
+  <span id="readerCounter" class="reader-counter">1 / 101</span>
+  <input type="range" id="readerProgress" min="1" max="101" value="1" aria-label="독서 페이지 이동" />
+  <button id="readerNext" aria-label="다음 페이지">다음 ›</button>
+  <span class="reader-hint">두 번 클릭 확대 · 확대 후 드래그 · Ctrl+휠 확대</span>
+ </div>
+</section>
+
 <script>
 const TOC_DATA=[{"level":1,"title":"김유성 | AI콘텐츠마케팅연구소 소장 유쌤클래스 대표강사","page":2},{"level":1,"title":"책 소개","page":3},{"level":1,"title":"머리말 | AI가 영상을 만드는 시대, 사람은 무엇을 결정해야 할까","page":4},{"level":2,"title":"이 책을 읽는 방법","page":5},{"level":1,"title":"목차","page":6},{"level":1,"title":"01 영상 기획과 콘텐츠 설계","page":14},{"level":2,"title":"01-1 영상 제작 목적","page":15},{"level":2,"title":"01-2 타깃 시청자","page":15},{"level":2,"title":"01-3 핵심 메시지","page":16},{"level":2,"title":"01-4 영상 콘셉트","page":17},{"level":2,"title":"01-5 영상 길이","page":17},{"level":2,"title":"01-6 스토리보드","page":18},{"level":1,"title":"02 영상 형식과 기술 규격","page":20},{"level":2,"title":"02-1 화면비율","page":21},{"level":2,"title":"02-2 해상도","page":22},{"level":2,"title":"02-3 프레임레이트","page":23},{"level":2,"title":"02-4 셔터속도","page":24},{"level":2,"title":"02-5 비디오 코덱","page":25},{"level":2,"title":"02-6 영상 컨테이너","page":26},{"level":1,"title":"03 영상 장르와 스타일","page":28},{"level":2,"title":"03-1 영상 장르","page":29},{"level":2,"title":"03-2 영상 스타일","page":29},{"level":2,"title":"03-3 영상 무드","page":30},{"level":2,"title":"03-4 영상 톤","page":31},{"level":2,"title":"03-5 영상미학","page":32},{"level":2,"title":"03-6 시각적 일관성","page":32},{"level":1,"title":"04 카메라와 촬영","page":34},{"level":2,"title":"04-1 카메라 앵글","page":35},{"level":2,"title":"04-2 샷 크기","page":36},{"level":2,"title":"04-3 화면구도","page":37},{"level":2,"title":"04-4 카메라 움직임","page":38},{"level":2,"title":"04-5 렌즈와 화각","page":39},{"level":2,"title":"04-6 초점과 심도","page":40},{"level":1,"title":"05 조명과 색채","page":42},{"level":2,"title":"05-1 조명 방식","page":43},{"level":2,"title":"05-2 조명 방향","page":44},{"level":2,"title":"05-3 색온도","page":45},{"level":2,"title":"05-4 명암과 대비","page":46},{"level":2,"title":"05-5 색보정","page":47},{"level":2,"title":"05-6 컬러 그레이딩","page":48},{"level":1,"title":"06 스토리텔링과 영상문법","page":50},{"level":2,"title":"06-1 스토리 구조","page":51},{"level":2,"title":"06-2 후킹","page":51},{"level":2,"title":"06-3 시퀀스","page":52},{"level":2,"title":"06-4 영상문법","page":52},{"level":2,"title":"06-5 시점","page":53},{"level":2,"title":"06-6 시각적 스토리텔링","page":54},{"level":1,"title":"07 영상 연출과 미장센","page":56},{"level":2,"title":"07-1 미장센","page":57},{"level":2,"title":"07-2 인물 설정","page":58},{"level":2,"title":"07-3 배경과 공간","page":59},{"level":2,"title":"07-4 인물 동선","page":59},{"level":2,"title":"07-5 소품과 의상","page":60},{"level":2,"title":"07-6 퍼포먼스 연출","page":61},{"level":1,"title":"08 영상 편집","page":62},{"level":2,"title":"08-1 컷 편집","page":63},{"level":2,"title":"08-2 장면 전환","page":64},{"level":2,"title":"08-3 편집 리듬","page":65},{"level":2,"title":"08-4 연속성 편집","page":65},{"level":2,"title":"08-5 속도 조절","page":66},{"level":2,"title":"08-6 B-roll과 인서트","page":67},{"level":1,"title":"09 사운드 디자인","page":69},{"level":2,"title":"09-1 내레이션","page":70},{"level":2,"title":"09-2 대사","page":70},{"level":2,"title":"09-3 배경음악","page":71},{"level":2,"title":"09-4 효과음","page":71},{"level":2,"title":"09-5 환경음","page":72},{"level":2,"title":"09-6 오디오 믹싱","page":72},{"level":1,"title":"10 자막과 모션그래픽","page":74},{"level":2,"title":"10-1 자막 디자인","page":75},{"level":2,"title":"10-2 자막 배치","page":76},{"level":2,"title":"10-3 모션그래픽","page":77},{"level":2,"title":"10-4 그래픽 전환","page":78},{"level":2,"title":"10-5 정보 시각화","page":78},{"level":2,"title":"10-6 브랜딩 요소","page":79},{"level":1,"title":"11 플랫폼과 영상 배포","page":80},{"level":2,"title":"11-1 플랫폼별 전략","page":81},{"level":2,"title":"11-2 시청 지속률","page":81},{"level":2,"title":"11-3 썸네일","page":82},{"level":2,"title":"11-4 제목과 설명","page":83},{"level":2,"title":"11-5 행동 유도","page":84},{"level":2,"title":"11-6 저작권과 초상권","page":84},{"level":1,"title":"12 AI 영상 제작과 프롬프트 설계","page":86},{"level":2,"title":"12-1 영상 프롬프트 구조","page":87},{"level":2,"title":"12-2 캐릭터 일관성","page":87},{"level":2,"title":"12-3 장면 일관성","page":88},{"level":2,"title":"12-4 이미지 투 비디오","page":89},{"level":2,"title":"12-5 텍스트 투 비디오","page":90},{"level":2,"title":"12-6 AI 영상 품질 검수","page":91},{"level":1,"title":"부록 D. 저작권 윤리 출판 점검","page":94},{"level":1,"title":"부록 E. 출판사 제출용 편집 소스 자료 목록","page":95},{"level":1,"title":"맺음말 | 영상 한 편에서 시작되는 변화","page":96},{"level":1,"title":"참고문헌 및 출처","page":98},{"level":2,"title":"출처 적용 및 사실 확인에 관한 편집자 주","page":99}];
 const COUNT=101, BREAK=760;let current=1,flipping=false,soundOn=true,overlayOpen=false;const $=id=>document.getElementById(id);
@@ -275,7 +343,7 @@ function buildToc(){let target=$('toc');const entries=[{level:1,title:'표지',p
 function closeMenu(){$('sidebar').classList.remove('open');$('backdrop').classList.remove('open')};function openMenu(){$('sidebar').classList.add('open');$('backdrop').classList.add('open')}
 $('focusMode').onclick=()=>{const on=$('yusungEbookApp').classList.toggle('focus-active');$('focusMode').setAttribute('aria-pressed',String(on));$('focusMode').innerHTML=on?'▤ <span class="focus-label">목차 보기</span>':'▣ <span class="focus-label">집중 독서</span>';};$('openMenu').onclick=openMenu;$('backdrop').onclick=closeMenu;$('closeMenu').onclick=closeMenu;$('tocFirst').onclick=()=>navigate(1);$('prev').onclick=prev;$('next').onclick=next;
 $('progress').addEventListener('change',e=>go(+e.target.value,false));$('pageInput').addEventListener('change',e=>go(+e.target.value,false));$('sound').onclick=()=>{soundOn=!soundOn;$('sound').setAttribute('aria-pressed',String(soundOn));$('sound').innerHTML=soundOn?'♫ <span class="long">소리 켜짐</span>':'♪ <span class="long">소리 꺼짐</span>'};
-$('fullscreen').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.()};
+$('fullscreen').onclick=()=>openReader();
 function openZoom(){overlayOpen=true;$('overlay').classList.add('open');$('zoomImage').src=file(current);$('zoomCount').textContent=`${current} / ${COUNT}`};function closeZoom(){overlayOpen=false;$('overlay').classList.remove('open')};$('zoom').onclick=openZoom;$('zoomClose').onclick=closeZoom;$('zoomPrev').onclick=()=>go(current-1,false);$('zoomNext').onclick=()=>go(current+1,false);$('zoomImage').onclick=()=>{};
 $('right').addEventListener('click',()=>{if(isMobile())openZoom()});$('left').addEventListener('click',openZoom);
 document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(e.key==='Escape'){closeMenu();closeZoom()}else if(e.key==='ArrowRight'){overlayOpen?go(current+1,false):next()}else if(e.key==='ArrowLeft'){overlayOpen?go(current-1,false):prev()}});
@@ -283,6 +351,102 @@ let startX=0,startY=0;const touch=$('book');touch.addEventListener('touchstart',
 let mobilePrev=isMobile();window.addEventListener('resize',()=>{if(isMobile()!==mobilePrev){mobilePrev=isMobile();render()}});
 try{current=clamp(localStorage.getItem('yusung-book-page')||1)}catch(e){};buildToc();render();
 if(isMobile())$('closeMenu').style.display='';
+
+
+// Screen-filling reader with actual image magnification (not merely fullscreen browser chrome).
+const reader=$('immersiveReader'), readerViewport=$('readerViewport'), readerPage=$('readerPage');
+let readerOpen=false,readerScale=1,readerFitWidth=1,readerFitHeight=1,readerOffsetX=0,readerOffsetY=0;
+let readerBaseW=0,readerBaseH=0,readerTouches=new Map(),readerTouchStart=null,readerPinch=null,readerStatusTimer;
+function readerNotify(msg){$('readerStatus').textContent=msg;$('readerStatus').classList.add('show');clearTimeout(readerStatusTimer);readerStatusTimer=setTimeout(()=>$('readerStatus').classList.remove('show'),1400)}
+function readerMeasure(reset=true){
+ const w=readerViewport.clientWidth,h=readerViewport.clientHeight;if(!w||!h)return;
+ const ratio=readerPage.naturalWidth&&readerPage.naturalHeight?readerPage.naturalWidth/readerPage.naturalHeight:1013/1432;
+ // Fit a complete page inside available screen area. User-controlled zoom grows it beyond the viewport.
+ readerBaseH=Math.min(h-12,(w-12)/ratio);readerBaseW=readerBaseH*ratio;
+ readerPage.style.width=readerBaseW+'px';readerPage.style.height=readerBaseH+'px';
+ if(reset){readerScale=1;readerOffsetX=(w-readerBaseW)/2;readerOffsetY=(h-readerBaseH)/2}
+ readerPaint();
+}
+function readerPaint(){
+ const w=readerViewport.clientWidth,h=readerViewport.clientHeight;
+ const iw=readerBaseW*readerScale,ih=readerBaseH*readerScale;
+ if(iw<=w)readerOffsetX=(w-iw)/2;else readerOffsetX=Math.max(w-iw,Math.min(0,readerOffsetX));
+ if(ih<=h)readerOffsetY=(h-ih)/2;else readerOffsetY=Math.max(h-ih,Math.min(0,readerOffsetY));
+ readerPage.style.transform=`translate3d(${readerOffsetX}px,${readerOffsetY}px,0) scale(${readerScale})`;
+ $('readerZoomPct').textContent=Math.round(readerScale*100)+'%';
+}
+function readerZoom(factor,clientX,clientY){
+ const target=Math.max(1,Math.min(5,factor));const rect=readerViewport.getBoundingClientRect();
+ const px=(clientX??(rect.left+rect.width/2))-rect.left,py=(clientY??(rect.top+rect.height/2))-rect.top;
+ const normX=(px-readerOffsetX)/readerScale,normY=(py-readerOffsetY)/readerScale;
+ readerScale=target;readerOffsetX=px-normX*readerScale;readerOffsetY=py-normY*readerScale;readerPaint();
+}
+function readerSetPage(){readerPage.src=file(current);readerPage.alt=`AI 영상 제작의 기초부터 실전까지 ${current}쪽`;
+ $('readerCounter').textContent=`${current} / ${COUNT}`;$('readerProgress').value=current;
+ $('readerPrev').disabled=current===1;$('readerNext').disabled=current===COUNT;
+ $('readerEdgePrev').disabled=current===1;$('readerEdgeNext').disabled=current===COUNT;
+ readerMeasure(true);
+}
+function readerNavigate(n){if(n<1||n>COUNT)return;go(n,false);readerSetPage()}
+async function openReader(){
+ closeZoom();closeMenu();readerOpen=true;reader.classList.add('open');reader.setAttribute('aria-hidden','false');document.body.classList.add('immersive-open');
+ // Fullscreen is a progressive enhancement: on unsupported browsers the overlay still fills the viewport.
+ try{if(reader.requestFullscreen)await reader.requestFullscreen({navigationUI:'hide'})}catch(e){}
+ readerSetPage();$('readerClose').focus({preventScroll:true});
+}
+async function closeReader(){
+ readerOpen=false;reader.classList.remove('open');reader.setAttribute('aria-hidden','true');document.body.classList.remove('immersive-open');
+ if(document.fullscreenElement===reader)try{await document.exitFullscreen()}catch(e){}
+ $('fullscreen').focus({preventScroll:true});
+}
+$('readerClose').onclick=closeReader;
+$('readerPrev').onclick=()=>readerNavigate(current-1);$('readerNext').onclick=()=>readerNavigate(current+1);
+$('readerEdgePrev').onclick=()=>readerNavigate(current-1);$('readerEdgeNext').onclick=()=>readerNavigate(current+1);
+$('readerProgress').oninput=e=>readerNavigate(Number(e.target.value));
+$('readerPlus').onclick=()=>readerZoom(readerScale*1.35);
+$('readerMinus').onclick=()=>readerZoom(readerScale/1.35);
+$('readerFit').onclick=()=>readerMeasure(true);
+readerPage.onload=()=>{if(readerOpen)readerMeasure(true)};
+readerViewport.addEventListener('wheel',e=>{
+ if(!readerOpen)return;
+ if(e.ctrlKey||e.metaKey){e.preventDefault();readerZoom(readerScale*(e.deltaY<0?1.13:.885),e.clientX,e.clientY)}
+ else if(readerScale>1){e.preventDefault();readerOffsetY-=e.deltaY;readerOffsetX-=e.deltaX;readerPaint()}
+},{passive:false});
+readerViewport.addEventListener('dblclick',e=>{if(e.target.closest('button'))return;readerZoom(readerScale>1.4?1:2.25,e.clientX,e.clientY)});
+readerViewport.addEventListener('pointerdown',e=>{
+ if(e.target.closest('button'))return;
+ readerViewport.setPointerCapture(e.pointerId);readerTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(readerTouches.size===1)readerTouchStart={x:e.clientX,y:e.clientY,ox:readerOffsetX,oy:readerOffsetY};
+ if(readerTouches.size===2){const points=[...readerTouches.values()];readerPinch={dist:Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y),scale:readerScale};readerTouchStart=null}
+ readerViewport.classList.add('grabbing');
+});
+readerViewport.addEventListener('pointermove',e=>{
+ if(!readerTouches.has(e.pointerId))return;
+ const prev=readerTouches.get(e.pointerId);readerTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(readerTouches.size===2&&readerPinch){const pts=[...readerTouches.values()];let dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);readerZoom(readerPinch.scale*dist/Math.max(1,readerPinch.dist),(pts[0].x+pts[1].x)/2,(pts[0].y+pts[1].y)/2)}
+ else if(readerTouchStart&&readerScale>1){readerOffsetX=readerTouchStart.ox+e.clientX-readerTouchStart.x;readerOffsetY=readerTouchStart.oy+e.clientY-readerTouchStart.y;readerPaint()}
+});
+function readerPointerEnd(e){if(!readerTouches.has(e.pointerId))return;const start=readerTouchStart;readerTouches.delete(e.pointerId);
+ if(readerTouches.size<2)readerPinch=null;
+ if(readerTouches.size===0){readerViewport.classList.remove('grabbing');readerTouchStart=null;
+ // Swipe to turn pages only at fit-to-screen scale, not while panning enlarged text.
+ if(start&&readerScale<=1.02){const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.3)readerNavigate(current+(dx<0?1:-1))}
+ }else if(readerTouches.size===1){const p=[...readerTouches.values()][0];readerTouchStart={x:p.x,y:p.y,ox:readerOffsetX,oy:readerOffsetY}}
+}
+readerViewport.addEventListener('pointerup',readerPointerEnd);readerViewport.addEventListener('pointercancel',readerPointerEnd);
+window.addEventListener('resize',()=>{if(readerOpen)readerMeasure(true)});
+document.addEventListener('fullscreenchange',()=>{if(readerOpen&&document.fullscreenElement!==reader){closeReader()}});
+// Capture keys only while the immersive reader is open; preserve existing book navigation otherwise.
+document.addEventListener('keydown',e=>{
+ if(!readerOpen)return;
+ if(['ArrowRight','ArrowLeft','Escape','+','=','-','0','PageDown','PageUp'].includes(e.key)){
+  e.preventDefault();e.stopImmediatePropagation();
+  if(e.key==='Escape')closeReader();else if(['ArrowRight','PageDown'].includes(e.key))readerNavigate(current+1);
+  else if(['ArrowLeft','PageUp'].includes(e.key))readerNavigate(current-1);
+  else if(e.key==='+'||e.key==='=')readerZoom(readerScale*1.3);
+  else if(e.key==='-')readerZoom(readerScale/1.3);else readerMeasure(true);
+ }
+},true);
 
 // 일반 방문자의 실수로 발생하는 우클릭·일부 개발자 도구 단축키를 제한합니다.
 // 브라우저로 전송된 HTML/JS/이미지를 완전히 숨기거나 복사를 막는 보안 수단은 아닙니다.
